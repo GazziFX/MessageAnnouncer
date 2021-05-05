@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using SDG.Unturned;
 using Rocket.Core.Plugins;
-using Rocket.Core.Logging;
 using Rocket.Unturned.Chat;
 using Rocket.Core;
 using System.Collections.Generic;
+using Logger = Rocket.Core.Logging.Logger;
 
 namespace fr34kyn01535.MessageAnnouncer
 {
@@ -25,7 +23,6 @@ namespace fr34kyn01535.MessageAnnouncer
 
         protected override void Load()
         {
-            Logger.Log("Load");
             if (Configuration != null && Configuration.Instance.TextCommands != null)
             {
                 foreach (TextCommand t in Configuration.Instance.TextCommands)
@@ -39,7 +36,6 @@ namespace fr34kyn01535.MessageAnnouncer
 
         protected override void Unload()
         {
-            Logger.Log("Unload");
             foreach (RocketTextCommand command in commands)
             {
                 R.Commands.DeregisterFromAssembly(this.Assembly);
@@ -55,7 +51,7 @@ namespace fr34kyn01535.MessageAnnouncer
                 {
                     if (lastindex > (Configuration.Instance.Messages.Length - 1)) lastindex = 0;
                     Message message = Configuration.Instance.Messages[lastindex];
-                    UnturnedChat.Say(message.Text, UnturnedChat.GetColorFromName(message.Color,Color.green));
+                    ChatManager.serverSendMessage(message.Text, UnturnedChat.GetColorFromName(message.Color, Color.green), iconURL: message.IconURL, useRichTextFormatting: true);
                     Logger.Log(message.Text);
                     lastmessage = DateTime.Now;
                     lastindex++;

@@ -1,12 +1,8 @@
 ﻿using Rocket.API;
-using Rocket.Unturned;
-using Rocket.Unturned.Chat;
-using SDG;
+using Rocket.Unturned.Player;
 using SDG.Unturned;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using UnityEngine;
 
 namespace fr34kyn01535.MessageAnnouncer
 {
@@ -31,9 +27,13 @@ namespace fr34kyn01535.MessageAnnouncer
 
         public void Execute(IRocketPlayer caller, string[] command)
         {
+            var uplayer = caller as UnturnedPlayer;
+            if (uplayer == null)
+                return;
+
             foreach (string l in text)
             {
-                UnturnedChat.Say(caller, l);
+                ChatManager.serverSendMessage(l, Color.white, toPlayer: uplayer.SteamPlayer(), useRichTextFormatting: true);
             }
         }
 
@@ -60,7 +60,7 @@ namespace fr34kyn01535.MessageAnnouncer
 
         public AllowedCaller AllowedCaller
         {
-            get { return Rocket.API.AllowedCaller.Both; }
+            get { return Rocket.API.AllowedCaller.Player; }
         }
     }
 }
